@@ -10,9 +10,9 @@ from ModelConfig import Config
 from matplotlib import pyplot as plt
 import numpy as np
 config=Config()
-dataset=GF2(config.train_ms_path,config.train_pan_path,config.patch_size,transfrom=transforms.Compose([Resample(),Normalize(),ToTensor()]))
+dataset=GF2(config.train_ms_path,config.train_pan_path,config.patch_size,transfrom=transforms.Compose([Resample(),ToTensor()]))
 dataloader=DataLoader(dataset,batch_size=config.batch_size,shuffle=True,num_workers=1)
-dataset_val=GF2(config.val_ms_path,config.val_pan_path,config.patch_size,transfrom=transforms.Compose([Resample(),Normalize(),ToTensor()]),option='Val')
+dataset_val=GF2(config.val_ms_path,config.val_pan_path,config.patch_size,transfrom=transforms.Compose([Resample(),ToTensor()]),option='Val')
 dataloader_val=DataLoader(dataset_val,batch_size=config.batch_size,shuffle=True,num_workers=1)
 net=Net()
 assert torch.cuda.is_available()
@@ -76,8 +76,7 @@ while(True):
             best_loss=np.mean(val_loss)
             torch.save(net.state_dict(), "best_model_2")
         epoch_val_loss.append(np.mean(val_loss))
-    print("train:"+str(epoch_train_loss[-1]))
-    print("val:"+str(epoch_val_loss[-1]))
+    print("Train loss of Epoch %d is %e, validate loss is %e" % (epoches, epoch_train_loss[-1], epoch_val_loss[-1]))
     plt.cla()
     ax.set_ylim(0, 0.01)
     ax.plot(np.arange(1,epoches+1),epoch_train_loss,label='Train')
