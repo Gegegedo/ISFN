@@ -78,7 +78,7 @@ while(True):
         epoch_val_loss.append(np.mean(val_loss))
     print("Train loss of Epoch %d is %e, validate loss is %e" % (epoches, epoch_train_loss[-1], epoch_val_loss[-1]))
     plt.cla()
-    ax.set_ylim(0, 0.01)
+    ax.set_ylim(0, max(epoch_train_loss[0],epoch_val_loss[0]))
     ax.plot(np.arange(1,epoches+1),epoch_train_loss,label='Train')
     ax.plot(np.arange(1,epoches+1),epoch_val_loss,'--',label='Val')
     ax.legend(loc='best')
