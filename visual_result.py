@@ -44,7 +44,8 @@ def chaneltransform(fusionimage):
     dstDS = None
     return visual_image
 if __name__ == '__main__':
-    visual_image=chaneltransform("fusion_suburb.tif")
-    cv2.imshow("",visual_image)
+    visual_image=chaneltransform("fusion_downtown.tif")
+    origin=chaneltransform("ms_downtown.tif")
+    cv2.imshow("",np.hstack((visual_image,origin)))
     cv2.waitKey(0)
     cv2.destroyAllWindows()

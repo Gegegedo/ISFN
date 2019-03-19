@@ -55,7 +55,7 @@ while(True):
         label=data['label'].to("cuda:0")
         fusion_result=net.forward(ms,pan)
         optimizer.zero_grad()
-        loss=criterion(fusion_result,label)
+        loss=criterion(fusion_result+label,label)
         train_loss.append(loss.item())
         loss.backward()
         optimizer.step()

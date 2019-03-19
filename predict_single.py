@@ -6,8 +6,8 @@ import numpy as np
 import cv2
 import time
 start=time.clock()
-ms_path='ms_suburb.tif'
-pan_path='pan_suburb.tif'
+ms_path='ms_downtown.tif'
+pan_path='pan_downtown.tif'
 source_ms=gdal.Open(ms_path)
 ms_array=source_ms.ReadAsArray(0,0,source_ms.RasterXSize,source_ms.RasterYSize)
 ms_array=ms_array.transpose(1,2,0)
@@ -45,7 +45,7 @@ with torch.no_grad():
     img = cv2.normalize(src=predict_result.transpose(1, 2, 0), dst=None, alpha=min_pixel, \
                         beta=max_pixel, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_16U)
     driver=gdal.GetDriverByName('GTiff')
-    dst=driver.Create("fusion_suburb.tif",512,512,4,gdal.GDT_UInt16)
+    dst=driver.Create("fusion_downtown.tif",512,512,4,gdal.GDT_UInt16)
     for band in range(4):
         dst.GetRasterBand(band+1).WriteArray(img[:,:,band])
     del dst
