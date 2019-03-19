@@ -16,12 +16,12 @@ dataset_val=GF2(config.val_ms_path,config.val_pan_path,config.patch_size,transfr
 dataloader_val=DataLoader(dataset_val,batch_size=config.batch_size,shuffle=True,num_workers=1)
 net=Net()
 assert torch.cuda.is_available()
-# net_paras=net.state_dict()
 net.apply(lambda m:kaiming_normal_(m.weight.data,mode='fan_out') if isinstance(m,nn.Conv2d) else None)
-# pretrain_paras={k:v for k,v in torch.load('best_model_2').items() if k in net_paras and v.shape==net_paras[k].shape}
+net_paras=net.state_dict()
+pretrain_paras={k:v for k,v in torch.load('best_model_2').items() if k in net_paras and v.shape==net_paras[k].shape}
 #
 # # net.apply(init_weight)
-# net_paras.update(pretrain_paras)
+net_paras.update(pretrain_paras)
 # net.eval()
 # net.load_state_dict(torch.load('best_model_2'))
 # net.eval()
@@ -74,7 +74,7 @@ while(True):
             val_loss.append(loss.item())
         if best_loss>np.mean(val_loss):
             best_loss=np.mean(val_loss)
-            torch.save(net.state_dict(), "best_model_2")
+            torch.save(net.state_dict(), "best_model")
         epoch_val_loss.append(np.mean(val_loss))
     print("Train loss of Epoch %d is %e, validate loss is %e" % (epoches, epoch_train_loss[-1], epoch_val_loss[-1]))
     plt.cla()
