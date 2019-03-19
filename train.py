@@ -55,7 +55,7 @@ while(True):
         label=data['label'].to("cuda:0")
         fusion_result=net.forward(ms,pan)
         optimizer.zero_grad()
-        loss=criterion(fusion_result+label,label)
+        loss=criterion(fusion_result,label)
         train_loss.append(loss.item())
         loss.backward()
         optimizer.step()
@@ -70,7 +70,7 @@ while(True):
             pan = data['pan'].to("cuda:0")
             label = data['label'].to("cuda:0")
             fusion_result = net.forward(ms, pan)
-            loss = criterion(fusion_result+label, label)
+            loss = criterion(fusion_result, label)
             val_loss.append(loss.item())
         if best_loss>np.mean(val_loss):
             best_loss=np.mean(val_loss)
