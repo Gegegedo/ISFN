@@ -26,12 +26,12 @@ class Net(nn.Module):
     def forward(self, ms, pan):
         pan_1 = F.leaky_relu(self.pconv_1(pan))
         pan_2 = F.leaky_relu(self.pconv_2(pan_1))
-        pan_3 = F.leaky_relu(self.pconv_2(torch.cat((pan_1,pan_2),1)))
-        bpan_1 = F.leaky_relu(self.pconv_3(torch.cat((pan_1, pan_2,pan_3), 1)))
-        pan_4 = F.leaky_relu(self.pconv_3(bpan_1))
-        bpan_2 = F.leaky_relu(self.pconv_3(torch.cat((pan_1, pan_2, pan_3,pan_4), 1)))
-        pan_5 = F.leaky_relu(self.pconv_3(bpan_2))
-        bpan_3 = F.leaky_relu(self.pconv_3(torch.cat((pan_1, pan_2, pan_3, pan_4,pan_5), 1)))
+        pan_3 = F.leaky_relu(self.pconv_3(torch.cat((pan_1,pan_2),1)))
+        bpan_1 = F.leaky_relu(self.bconv_1(torch.cat((pan_1, pan_2,pan_3), 1)))
+        pan_4 = F.leaky_relu(self.pconv_4(bpan_1))
+        bpan_2 = F.leaky_relu(self.bconv_2(torch.cat((pan_1, pan_2, pan_3,pan_4), 1)))
+        pan_5 = F.leaky_relu(self.pconv_5(bpan_2))
+        bpan_3 = F.leaky_relu(self.bconv_3(torch.cat((pan_1, pan_2, pan_3, pan_4,pan_5), 1)))
         pan_6=F.leaky_relu(self.pconv_6(bpan_3))
 
         ms_1 = F.leaky_relu(self.mconv_1(ms))
