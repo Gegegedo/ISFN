@@ -20,7 +20,7 @@ class Net(nn.Module):
         self.mconv_3 = nn.Conv2d(64 * 2, 64, (3, 3), (1, 1), (1, 1))
 
         self.fconv_1 = nn.Conv2d(128, 64, (3, 3), (1, 1), (1, 1))
-        self.fconv_1 = nn.Conv2d(64, 64, (3, 3), (1, 1), (1, 1))
+        self.fconv_2 = nn.Conv2d(64, 64, (3, 3), (1, 1), (1, 1))
         self.ps_1 = nn.PixelShuffle(4)
 
     def forward(self, ms, pan):
@@ -46,4 +46,4 @@ class Net(nn.Module):
         fusion = self.fconv_2(fusion)
         fusion = self.ps_1(fusion)
 
-        return fusion+ms
+        return fusion
