@@ -29,14 +29,14 @@ class Normalize():
 
     def __call__(self,imageinfo):
         #args:ms,pan,label
-        max_pixel = max((imageinfo.ms.max(), imageinfo.pan.max()))
-        min_pixel = min((imageinfo.ms.min(), imageinfo.pan.min()))
-        imageinfo.max_pixel = max_pixel
-        imageinfo.min_pixel = min_pixel
-        imageinfo.ms = (imageinfo.ms - min_pixel) / (max_pixel - min_pixel)
-        imageinfo.pan = (imageinfo.pan - min_pixel) / (max_pixel - min_pixel)
+        # max_pixel = max((imageinfo.ms.max(), imageinfo.pan.max()))
+        # min_pixel = min((imageinfo.ms.min(), imageinfo.pan.min()))
+        # imageinfo.max_pixel = max_pixel
+        # imageinfo.min_pixel = min_pixel
+        imageinfo.ms = (imageinfo.ms - imageinfo.min_pixel) / (imageinfo.max_pixel - imageinfo.min_pixel)
+        imageinfo.pan = (imageinfo.pan - imageinfo.min_pixel) / (imageinfo.max_pixel - imageinfo.min_pixel)
         if imageinfo.option!='Test':
-            imageinfo.label=(imageinfo.label-min_pixel)/(max_pixel-min_pixel)
+            imageinfo.label=(imageinfo.label-imageinfo.min_pixel)/(imageinfo.max_pixel - imageinfo.min_pixel)
                    # cv2.normalize(src=args[2],dst=None, alpha=0, beta=1, norm_type=cv2.NORM_MINMAX)
         return imageinfo
 class ToTensor():
@@ -53,7 +53,7 @@ class ImageInfo():
         self.ms=ms
         self.pan=pan
         self.option=option
-        self.max_pixel=0
+        self.max_pixel=1500
         self.min_pixel=0
         self.label=0
     def to_dict(self):
