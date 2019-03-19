@@ -46,4 +46,4 @@ class Net(nn.Module):
         fusion = self.fconv_2(fusion)
         fusion = self.ps_1(fusion)
 
-        return fusion
+        return fusion+ms
