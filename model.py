@@ -15,10 +15,15 @@ class Net(nn.Module):
         self.bconv_3 = nn.Conv2d(64 * 5, 64 * 2, (1, 1), (1, 1), (0, 0))
         self.pconv_6 = nn.Conv2d(64*2, 4, (3, 3), (1, 1), (1, 1))
 
-
-        self.mconv_1 = nn.Conv2d(4, 64, (5, 5), (1, 1), (2,2))
+        self.mconv_1 = nn.Conv2d(4, 64, (3, 3), (1, 1), (1, 1))
         self.mconv_2 = nn.Conv2d(64, 64, (3, 3), (1, 1), (1, 1))
         self.mconv_3 = nn.Conv2d(64 * 2, 64, (3, 3), (1, 1), (1, 1))
+        self.mbconv_1 = nn.Conv2d(64 * 3, 64 * 2, (3, 3), (1, 1), (1, 1))
+        self.mconv_4 = nn.Conv2d(64 * 2, 64, (3, 3), (1, 1), (1, 1))
+        self.mbconv_2 = nn.Conv2d(64 * 4, 64 * 2, (3, 3), (1, 1), (1, 1))
+        self.mconv_5 = nn.Conv2d(64 * 2, 64, (3, 3), (1, 1), (1, 1))
+        self.mbconv_3 = nn.Conv2d(64 * 5, 64 * 2, (3, 3), (1, 1), (1, 1))
+        self.mconv_6 = nn.Conv2d(64 * 2, 64, (3, 3), (1, 1), (1, 1))
         self.ps_1 = nn.PixelShuffle(4)
 
         self.fconv_1 = nn.Conv2d(128, 64, (3, 3), (1, 1), (1, 1))
