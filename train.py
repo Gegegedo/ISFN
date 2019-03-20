@@ -10,15 +10,15 @@ from ModelConfig import Config
 from matplotlib import pyplot as plt
 import numpy as np
 config=Config()
-dataset=GF2(config.train_ms_path,config.train_pan_path,config.patch_size,transfrom=transforms.Compose([Resample(),ToTensor()]))
+dataset=GF2(config.train_ms_path,config.train_pan_path,config.patch_size,transfrom=transforms.Compose([Resample(),Normalize(),ToTensor()]))
 dataloader=DataLoader(dataset,batch_size=config.batch_size,shuffle=True,num_workers=1)
-dataset_val=GF2(config.val_ms_path,config.val_pan_path,config.patch_size,transfrom=transforms.Compose([Resample(),ToTensor()]),option='Val')
+dataset_val=GF2(config.val_ms_path,config.val_pan_path,config.patch_size,transfrom=transforms.Compose([Resample(),Normalize(),ToTensor()]),option='Val')
 dataloader_val=DataLoader(dataset_val,batch_size=config.batch_size,shuffle=True,num_workers=1)
 net=Net()
 assert torch.cuda.is_available()
 net.apply(lambda m:kaiming_normal_(m.weight.data,mode='fan_out') if isinstance(m,nn.Conv2d) else None)
 net_paras=net.state_dict()
-pretrain_paras={k:v for k,v in torch.load('best_model_2').items() if k in net_paras and v.shape==net_paras[k].shape}
+pretrain_paras={k:v for k,v in torch.load('best_model').items() if k in net_paras and v.shape==net_paras[k].shape}
 #
 # # net.apply(init_weight)
 net_paras.update(pretrain_paras)
