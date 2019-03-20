@@ -11,16 +11,16 @@ class Resample():
         if imageinfo.option!='Test':
             input_ms=cv2.resize(src=imageinfo.ms,dsize=(int(imageinfo.ms.shape[1]/self.factor),int(imageinfo.ms.shape[0]/self.factor)),
                                 interpolation=cv2.INTER_LINEAR)
-            input_pan=cv2.resize(src=imageinfo.pan,dsize=(int(imageinfo.pan.shape[1]/(self.factor**2)),int(imageinfo.pan.shape[0]/(self.factor**2))),
+            input_pan=cv2.resize(src=imageinfo.pan,dsize=(int(imageinfo.pan.shape[1]/(self.factor)),int(imageinfo.pan.shape[0]/(self.factor))),
                                  interpolation=cv2.INTER_LINEAR)
             # input_ms=cv2.resize(src=input_ms,dsize=(imageinfo.ms.shape[1],imageinfo.ms.shape[0]),interpolation=cv2.INTER_LINEAR)
             imageinfo.label = imageinfo.ms.astype(np.float32)
             imageinfo.ms=input_ms.astype(np.float32)
             imageinfo.pan=input_pan.astype(np.float32)
         else:
-            input_pan = cv2.resize(src=imageinfo.pan,dsize=(int(imageinfo.ms.shape[1]), int(imageinfo.ms.shape[0])),
-                                  interpolation=cv2.INTER_LINEAR)
-            imageinfo.pan=input_pan.astype(np.float32)
+            # input_pan = cv2.resize(src=imageinfo.pan,dsize=(int(imageinfo.ms.shape[1]), int(imageinfo.ms.shape[0])),
+            #                       interpolation=cv2.INTER_LINEAR)
+            imageinfo.pan=imageinfo.pan.astype(np.float32)
             imageinfo.ms=imageinfo.ms.astype(np.float32)
         return imageinfo
 class Registration():
