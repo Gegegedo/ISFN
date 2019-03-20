@@ -42,12 +42,13 @@ with torch.no_grad():
     max_pixel = image_info.max_pixel
     min_pixel = image_info.min_pixel
 
-    img = cv2.normalize(src=predict_result.transpose(1, 2, 0), dst=None, alpha=min_pixel, \
-                        beta=max_pixel, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_16U)
+    # img = cv2.normalize(src=predict_result.transpose(1, 2, 0), dst=None, alpha=min_pixel, \
+    #                     beta=max_pixel, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_16U)
+    img=predict_result*image_info.max_pixel
     driver=gdal.GetDriverByName('GTiff')
     dst=driver.Create("fusion_downtown.tif",512,512,4,gdal.GDT_UInt16)
     for band in range(4):
-        dst.GetRasterBand(band+1).WriteArray(img[:,:,band])
+        dst.GetRasterBand(band+1).WriteArray(img[band])
     del dst
 print(time.clock()-start)
     # fusion[y_off[idx]:y_off[idx]+dataset.patch_size*4,x_off[idx]:x_off[idx]+dataset.patch_size*4,:]=img
