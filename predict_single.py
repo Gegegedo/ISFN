@@ -39,8 +39,8 @@ input_pan=torch.from_numpy(image_info.pan).to('cuda:0')
 with torch.no_grad():
     predict_result=net.forward(input_ms,input_pan).to('cpu')
     predict_result = np.squeeze(predict_result.numpy())
-    max_pixel = image_info.max_pixel
-    min_pixel = image_info.min_pixel
+    # max_pixel = image_info.max_pixel
+    # min_pixel = image_info.min_pixel
 
     # img = cv2.normalize(src=predict_result.transpose(1, 2, 0), dst=None, alpha=min_pixel, \
     #                     beta=max_pixel, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_16U)
