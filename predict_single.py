@@ -44,7 +44,7 @@ with torch.no_grad():
 
     # img = cv2.normalize(src=predict_result.transpose(1, 2, 0), dst=None, alpha=min_pixel, \
     #                     beta=max_pixel, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_16U)
-    img=predict_result*image_info.max_pixel
+    img=predict_result*image_info.max_pixel.astype('uint16')
     driver=gdal.GetDriverByName('GTiff')
     dst=driver.Create("fusion_downtown.tif",512,512,4,gdal.GDT_UInt16)
     for band in range(4):
