@@ -34,7 +34,10 @@ class Net(nn.Module):
         self.mconv_11 = nn.Conv2d(64 * 2, 64, (3, 3), (1, 1), (1, 1))
         self.mbconv_6 = nn.Conv2d(64 * 5, 64 * 2, (1, 1), (1, 1), (0, 0))
         self.mconv_12 = nn.Conv2d(64 * 2, 64, (3, 3), (1, 1), (1, 1))
-        self.ps_1 = nn.PixelShuffle(4)
+
+        self.deconv_1=nn.ConvTranspose2d(64*2,64,(3,3),(2,2),(1,1))
+        self.deconv_2 = nn.ConvTranspose2d(64, 64, (3, 3), (2, 2), (1, 1))
+        self.reconv=nn.Conv2d(64,4,(3,3),(1,1),(1,1))
 
         self.fconv_1 = nn.Conv2d(128, 64, (3, 3), (1, 1), (1, 1))
         self.fconv_1 = nn.Conv2d(64, 64, (3, 3), (1, 1), (1, 1))
@@ -71,7 +74,9 @@ class Net(nn.Module):
         bms_6 = F.leaky_relu(self.mbconv_6(torch.cat((ms_7, ms_8, ms_9, ms_10,ms_11), 1)))
         ms_12 = F.leaky_relu(self.mconv_12(bms_6))
 
-        ms_up = self.ps_1(ms_12)
+        ms_up=F.leaky_relu(self.deconv_1(torch.cat((ms_6,ms_12),1)))
+        ms_up=F.leaky_relu(self.deconv_2(ms_up))
+        ms_up=F.leaky_relu(self.reconv(ms_up))
         # fusion_3 = self.ps_3(F.leaky_relu(self.fconv_3(torch.cat((pan_3, ms_3), 1))))
         pan_1 = F.leaky_relu(self.pconv_1(torch.cat((pan,ms_up),1)))
         pan_2 = F.leaky_relu(self.pconv_2(pan_1))
@@ -87,4 +92,4 @@ class Net(nn.Module):
         # fusion = F.leaky_relu(self.fconv_1(torch.cat((pan_6,ms_3),1)))
         # fusion = self.fconv_2(fusion)
 
-        return ms_up
+        return pan_6
