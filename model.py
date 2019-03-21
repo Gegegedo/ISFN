@@ -35,8 +35,8 @@ class Net(nn.Module):
         self.mbconv_6 = nn.Conv2d(64 * 5, 64 * 2, (1, 1), (1, 1), (0, 0))
         self.mconv_12 = nn.Conv2d(64 * 2, 64, (3, 3), (1, 1), (1, 1))
 
-        self.deconv_1=nn.ConvTranspose2d(64*2,64,(3,3),(2,2),(1,1))
-        self.deconv_2 = nn.ConvTranspose2d(64, 64, (3, 3), (2, 2), (1, 1))
+        self.deconv_1=nn.ConvTranspose2d(64*2,64,(3,3),(2,2),(1,1),(1,1))
+        self.deconv_2 = nn.ConvTranspose2d(64, 64, (3, 3), (2, 2), (1, 1),(1,1))
         self.reconv=nn.Conv2d(64,4,(3,3),(1,1),(1,1))
 
         self.fconv_1 = nn.Conv2d(128, 64, (3, 3), (1, 1), (1, 1))
