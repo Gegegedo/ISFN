@@ -52,11 +52,10 @@ while(True):
     train_loss, val_loss = [], []
     for data in dataloader:
         ms=data['ms'].to("cuda:0")
-        pan=data['pan'].to("cuda:0")
         label=data['label'].to("cuda:0")
-        fusion_result=net.forward(ms,pan)
+        SR_result=net.forward(ms)
         optimizer.zero_grad()
-        loss=criterion(fusion_result,label)
+        loss=criterion(SR_result,label)
         train_loss.append(loss.item())
         loss.backward()
         optimizer.step()
@@ -68,14 +67,13 @@ while(True):
     with torch.no_grad():
         for data in dataloader_val:
             ms = data['ms'].to("cuda:0")
-            pan = data['pan'].to("cuda:0")
             label = data['label'].to("cuda:0")
-            fusion_result = net.forward(ms, pan)
-            loss = criterion(fusion_result, label)
+            SR_result = net.forward(ms)
+            loss = criterion(SR_result, label)
             val_loss.append(loss.item())
         if best_loss>np.mean(val_loss):
             best_loss=np.mean(val_loss)
-            torch.save(net.state_dict(), "best_model")
+            torch.save(net.state_dict(), "SR_best_model")
         epoch_val_loss.append(np.mean(val_loss))
     print("Train loss of Epoch %d is %e, validate loss is %e" % (epoches, epoch_train_loss[-1], epoch_val_loss[-1]))
     plt.cla()
