@@ -6,6 +6,11 @@ class SR_Config():
     bottle_neck_layer=2
     input_channel=growth_rate*dense_layer_num
     dense_features=growth_rate*dense_layer_num*block_num
+class Dense():
+    growth_rate=12
+    layer_num=15
+    dense_channel=growth_rate*(layer_num+1)
+    neck_channel=128
 class Config():
     patch_size=64
     train_ms_path = '/media/zhou/文档/GF2/GF2_PMS2_E117.4_N39.1_20170510_L1A0002351826/GF2_PMS2_E117.4_N39.1_20170510_L1A0002351826-MSS2.tiff'

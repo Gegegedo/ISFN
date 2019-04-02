@@ -1,6 +1,5 @@
 import torch
 from torch import optim,nn
-from model import Net
 from torch.utils.data import DataLoader
 from torch.nn.init import kaiming_normal_
 from dataset import GF2
@@ -8,14 +7,14 @@ from dataset import Resample,Normalize,ToTensor
 from torchvision import transforms
 from ModelConfig import Config
 from matplotlib import pyplot as plt
-from SRNet import SRNet
+from denfn import Net
 import numpy as np
 config=Config()
 dataset=GF2(config.train_ms_path,config.train_pan_path,config.patch_size,transfrom=transforms.Compose([Resample(),Normalize(),ToTensor()]))
 dataloader=DataLoader(dataset,batch_size=config.batch_size,shuffle=True,num_workers=1)
 dataset_val=GF2(config.val_ms_path,config.val_pan_path,config.patch_size,transfrom=transforms.Compose([Resample(),Normalize(),ToTensor()]),option='Val')
 dataloader_val=DataLoader(dataset_val,batch_size=config.batch_size,shuffle=True,num_workers=1)
-net=SRNet()
+net=Net()
 assert torch.cuda.is_available()
 net.apply(lambda m:kaiming_normal_(m.weight.data,mode='fan_out') if isinstance(m,nn.Conv2d) else None)
 # net_paras=net.state_dict()

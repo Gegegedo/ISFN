@@ -22,8 +22,8 @@ class SRNet(nn.Module):
         for i in range(SR_Config.block_num):
             self.add_module('dense_block%d'%(i+1),dense_block())
         self.bottle_neck=nn.Conv2d(SR_Config.dense_features+SR_Config.input_channel,SR_Config.bottle_neck_channel,1,1,0)
-        self.deconv1=nn.ConvTranspose2d(SR_Config.bottle_neck_channel,SR_Config.bottle_neck_channel,3,1,1)
-        self.deconv2=nn.ConvTranspose2d(SR_Config.bottle_neck_channel,SR_Config.bottle_neck_channel,3,1,1)
+        self.deconv1=nn.ConvTranspose2d(SR_Config.bottle_neck_channel,SR_Config.bottle_neck_channel,3,2,1,1)
+        self.deconv2=nn.ConvTranspose2d(SR_Config.bottle_neck_channel,SR_Config.bottle_neck_channel,3,2,1,1)
         self.rl=nn.Conv2d(SR_Config.bottle_neck_channel,4,3,1,1)
     def forward(self, ms):
         features=[]
