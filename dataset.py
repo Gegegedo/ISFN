@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import gdal
 import cv2
+from functools import reduce
 class Resample():
     def __init__(self,factor=4):
         self.factor=factor
@@ -62,31 +63,40 @@ class ImageInfo():
 class GF2(Dataset):
     def __init__(self,ms_path,pan_path,patch_size,
                  transfrom=None,option='Train'):
-        self.ms=gdal.Open(ms_path)
-        self.pan=gdal.Open(pan_path)
-        self.patch_size=patch_size
-        self.option=option
-        # self.patch_num=patch_num
-        self.transform=transfrom
-        self.x_limit=min((self.ms.RasterXSize,int(self.pan.RasterXSize/4)))
-        self.y_limit=min((self.ms.RasterYSize,int(self.pan.RasterYSize/4)))
-        self.x_patchs=self.x_limit//self.patch_size
-        self.y_patchs=self.y_limit//self.patch_size
+        self.patch_size = patch_size
+        self.option = option
+        self.transform = transfrom
+        self.ms=list(map(gdal.Open,ms_path))
+        self.pan=list(map(gdal.Open,pan_path))
+        self.x_limit=list(map(lambda ms,pan:min(ms.RasterXSize,int(pan.RasterXSize/4)),self.ms,self.pan))
+        self.y_limit=list(map(lambda ms,pan:min(ms.RasterYSize,int(pan.RasterYSize/4)),self.ms,self.pan))
+        self.x_patchs=list(map(lambda x_limit:x_limit // self.patch_size,self.x_limit))
+        self.y_patchs=list(map(lambda y_limit:y_limit // self.patch_size,self.y_limit))
+        self.global_index=list(map(lambda x_patch,y_patch:x_patch*y_patch,self.x_patchs,self.y_patchs))
+        for i in range(1,len(self.global_index)):
+            self.global_index[i]=sum(self.global_index[0:i+1])
         # sample_xlocs=np.random.randint(low=0,high=x_limit-patch_size,size=patch_num)
         # sample_ylocs=np.random.randint(low=0,high=y_limit-patch_size,size=patch_num)
         # self.samples=list(zip(sample_xlocs,sample_ylocs))
     def __len__(self):
-        if self.option!='Val':
-            return self.x_patchs*self.y_patchs
-        else:
-            return 2000
+        # if self.option!='Val':
+            return self.global_index[-1]
+        # else:
+        #     return 2000
     def __getitem__(self, idx):
-        if self.option=='Val':
-            idx=idx*2
-        x_off=idx%self.x_patchs*self.patch_size
-        y_off=idx//self.x_patchs*self.patch_size
-        ms=self.ms.ReadAsArray(x_off,y_off,self.patch_size,self.patch_size)
-        pan=self.pan.ReadAsArray(int(x_off*4), int(y_off*4), self.patch_size*4, self.patch_size*4)
+        # if self.option=='Val':
+        #     idx=idx*2
+        source=-1
+        for i,global_index in self.global_index:
+            if source==-1:
+                if idx<global_index:
+                    source=i
+            else:
+                break
+        x_off=(idx-self.global_index[source-1])%self.x_patchs[source]*self.patch_size
+        y_off=(idx-self.global_index[source-1])//self.x_patchs[source]*self.patch_size
+        ms=self.ms[source].ReadAsArray(x_off,y_off,self.patch_size,self.patch_size)
+        pan=self.pan[source].ReadAsArray(int(x_off*4), int(y_off*4), self.patch_size*4, self.patch_size*4)
         #H*W*C
         ms=ms.transpose(1,2,0)
         if self.transform:

@@ -13,7 +13,7 @@ class Dense_extraction(nn.Sequential):
     def __init__(self):
         super().__init__()
         for layer_index in range(Dense.layer_num):
-            self.add_module("dense_conv%d"%(layer_index+1),Dense_layer(layer_index))
+            self.add_module("dense_conv%d"%(layer_index+1),Dense_layer(layer_index+1))
         self.add_module("bottle_neck",nn.Conv2d(Dense.dense_channel,Dense.neck_channel,1,1))
 class Net(nn.Module):
     def __init__(self):
@@ -22,7 +22,7 @@ class Net(nn.Module):
         self.add_module("ms_conv",nn.Conv2d(4,Dense.growth_rate,3,1,1))
         self.add_module("ms_dense",Dense_extraction())
         self.add_module("deconv1",nn.ConvTranspose2d(Dense.neck_channel,Dense.neck_channel,3,2,1,1))
-        self.add_module("deconv1", nn.ConvTranspose2d(Dense.neck_channel, Dense.neck_channel,3, 2, 1, 1))
+        self.add_module("deconv2", nn.ConvTranspose2d(Dense.neck_channel, Dense.neck_channel,3, 2, 1, 1))
         ###PAN feature extraction
         self.add_module("pan_conv",nn.Conv2d(1,Dense.growth_rate,3,1,1))
         self.add_module("pan_dense",Dense_extraction())
@@ -43,3 +43,8 @@ class Net(nn.Module):
         fusion = F.relu(self.f_conv2(fusion))
         fusion = F.relu(self.f_conv3(fusion))
         return fusion
+if __name__ == '__main__':
+    ms=torch.randn(1,4,16,16)
+    pan=torch.randn(1,1,64,64)
+    net=Net()
+    fusion=Net.forward()
